@@ -36,6 +36,7 @@ def initialize_database():
     CREATE TABLE IF NOT EXISTS inpatient (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         patient_id INTEGER,
+        department_id INTEGER,
         room_number TEXT,
         admission_date TEXT,
         discharge_date TEXT,
@@ -70,16 +71,6 @@ def initialize_database():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         department_id INTEGER
-    )
-    """)
-
-    # create a table for the patient's medical history. it has a patient_id field to reference the inpatient table, and a description field to store the medical history. a field for the date of the medical history is also included.
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS medical_history (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        patient_id INTEGER,
-        description TEXT,
-        date_and_time TEXT
     )
     """)
 

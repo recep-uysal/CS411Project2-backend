@@ -8,7 +8,7 @@ class AdmissionCRUD:
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = """
-        INSERT INTO admission (patient_name, age, gender, contact, address, admitted_on, reason)
+        INSERT INTO admission (patient_name, age, gender, contact, address, admitted_on, description)
         VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         cursor.execute(query, (
@@ -18,7 +18,7 @@ class AdmissionCRUD:
             admission.contact,
             admission.address,
             admission.admitted_on,
-            admission.reason,
+            admission.description,
         ))
         connection.commit()
         connection.close()
