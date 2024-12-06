@@ -52,15 +52,17 @@ def initialize_database():
     )
     """)
 
-    # create table for the department rooms. Each room belongs to a department and has a room number. also has a status, which can be either "occupied" or "vacant"
+    # create table for the department rooms. Each room belongs to a department and has a room number. also has a status, which can be either "occupied" or "vacant". als, patient_id field to reference inpateint table. it can be null if the room is vacant.
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS room (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         department_id INTEGER,
         room_number TEXT,
-        status TEXT
+        status TEXT,
+        patient_id INTEGER
     )
     """)
+
 
     # create table for the department staff. they are users who are assigned to a department. use user_id to reference the user table, and department_id to reference the department table.
     cursor.execute("""
@@ -68,6 +70,16 @@ def initialize_database():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         department_id INTEGER
+    )
+    """)
+
+    # create a table for the patient's medical history. it has a patient_id field to reference the inpatient table, and a description field to store the medical history. a field for the date of the medical history is also included.
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS medical_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        patient_id INTEGER,
+        description TEXT,
+        date_and_time TEXT
     )
     """)
 
