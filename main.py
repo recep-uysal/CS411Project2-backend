@@ -1,23 +1,20 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-from fastapi import lifespan
+from contextlib import asynccontextmanager
 from router.login_router import login_router
 from router.register_router import register_router
 from router.inpatient_router import inpatient_router
 from router.admission_router import admission_router
 from database_setup import initialize_database  # Import your database setup function
 
-# Define the lifespan context manager
+# Define the lifespan context manager using asynccontextmanager
+@asynccontextmanager
 async def lifespan(app: FastAPI):
     # Code to execute on startup
     initialize_database()
-
-    # Yield control to FastAPI
-    yield
-
+    yield  # Yield control to FastAPI
     # Code to execute on shutdown (if needed)
-    # Add any cleanup logic here
 
 # Create the FastAPI app with lifespan
 app = FastAPI(lifespan=lifespan)
@@ -53,6 +50,6 @@ if __name__ == "__main__":
         "main:app",
         host="127.0.0.1",
         port=9000,
-        reload=False,
+        reload=True,  # Changed to True for development (hot reload)
         workers=1,
     )

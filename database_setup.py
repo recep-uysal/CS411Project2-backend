@@ -20,8 +20,9 @@ def initialize_database():
     # Create admission table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS admission (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id TEXT PRIMARY KEY,
         patient_name TEXT,
+        patient_surname TEXT,
         age INTEGER,
         gender TEXT,
         contact TEXT,

@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 class AdmissionDTO(BaseModel):
-    name: str
-    surname: str
+    patient_name: str
+    patient_surname: str
     age: int
     gender: str
     contact: str

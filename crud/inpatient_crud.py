@@ -2,7 +2,7 @@ import sqlite3
 
 class InpatientCRUD:
     def __init__(self):
-        self.db_path = "healthcare.db"
+        self.db_path = "user.db"
 
     def add_inpatient(self, inpatient):
         connection = sqlite3.connect(self.db_path)
