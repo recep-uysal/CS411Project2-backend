@@ -20,6 +20,9 @@ class AdmissionService:
     def delete_admission(self, admission_id):
         self.admission_crud.delete_admission(admission_id)
 
-    def get_patient_admissions(self, patient_id):
-        return self.admission_crud.get_patient_admissions(patient_id)
+    def get_patient_admissions(self, government_id):
+        return self.admission_crud.get_patient_admissions(government_id)
         
+
+    def get_department_admissions(self, department_id):
+        return self.admission_crud.get_department_admissions(department_id)

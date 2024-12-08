@@ -10,3 +10,4 @@ class AdmissionDTO(BaseModel):
     address: str
     admitted_on: str
     reason: str
+    department_id: int

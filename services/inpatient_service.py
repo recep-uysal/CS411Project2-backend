@@ -8,20 +8,20 @@ class InpatientService:
     def add_inpatient(self, inpatient: InpatientDTO):
         return self.inpatient_crud.add_inpatient(inpatient)
 
-    def get_inpatient(self, patient_id: int):
-        return self.inpatient_crud.get_inpatient_by_id(patient_id)
+    def get_inpatient(self, inpatient_id):
+        return self.inpatient_crud.get_inpatient_by_id(inpatient_id)
 
-    def update_inpatient(self, patient_id: int, inpatient: InpatientDTO):
-        return self.inpatient_crud.update_inpatient(patient_id, inpatient)
+    def update_inpatient(self, inpatient_id: str, inpatient: InpatientDTO):
+        return self.inpatient_crud.update_inpatient(inpatient_id, inpatient)
 
-    def delete_inpatient(self, patient_id: int):
-        return self.inpatient_crud.delete_inpatient(patient_id)
+    def delete_inpatient(self, inpatient_id):
+        return self.inpatient_crud.delete_inpatient(inpatient_id)
     
     def get_all_inpatients(self):
         return self.inpatient_crud.get_all_inpatients()
     
-    def get_all_inpatients_by_user(self, user_id: int):
-        return self.inpatient_crud.get_all_inpatients_by_user(user_id)
+    def get_all_inpatients_by_government_id(self, government_id: int):
+        return self.inpatient_crud.get_all_inpatients_by_government_id(government_id)
     
     def get_all_inpatients_by_department(self, department_id: int):
         return self.inpatient_crud.get_all_inpatients_by_department(department_id)

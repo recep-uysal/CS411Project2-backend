@@ -9,23 +9,23 @@ inpatient_service = InpatientService()
 def add_inpatient(inpatient: InpatientDTO):
     return inpatient_service.add_inpatient(inpatient)
 
-@inpatient_router.get("/inpatients/{patient_id}")
-def get_inpatient(patient_id: int):
-    inpatient = inpatient_service.get_inpatient(patient_id)
+@inpatient_router.get("/inpatients/{inpatient_id}")
+def get_inpatient(inpatient_id):
+    inpatient = inpatient_service.get_inpatient(inpatient_id)
     if not inpatient:
         raise HTTPException(status_code=404, detail="Inpatient not found")
     return inpatient
 
 
 # route to update inpatient
-@inpatient_router.put("/inpatients/{patient_id}")
-def update_inpatient(patient_id: int, inpatient: InpatientDTO):
-    return inpatient_service.update_inpatient(patient_id, inpatient)
+@inpatient_router.put("/inpatients/{inpatient_id}")
+def update_inpatient( inpatient_id: str, inpatient: InpatientDTO):
+    return inpatient_service.update_inpatient(inpatient_id,inpatient)
 
 # route to delete inpatient
-@inpatient_router.delete("/inpatients/{patient_id}")
-def delete_inpatient(patient_id: int):
-    return inpatient_service.delete_inpatient(patient_id)
+@inpatient_router.delete("/inpatients/{inpatient_id}")
+def delete_inpatient(inpatient_id):
+    return inpatient_service.delete_inpatient(inpatient_id)
 
 
 #get all inpatients
@@ -34,9 +34,9 @@ def get_all_inpatients():
     return inpatient_service.get_all_inpatients()
 
 # get all inpatients of a user
-@inpatient_router.get("/inpatients/user/{user_id}")
-def get_all_inpatients_by_user(user_id: int):
-    return inpatient_service.get_all_inpatients_by_user(user_id)
+@inpatient_router.get("/inpatients/user/{government_id}")
+def get_all_inpatients_by_government_id(government_id: int):
+    return inpatient_service.get_all_inpatients_by_government_id(government_id)
 
 # get all inpatients of a department
 @inpatient_router.get("/inpatients/department/{department_id}")

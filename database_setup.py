@@ -29,7 +29,8 @@ def initialize_database():
         contact TEXT,
         address TEXT,
         admitted_on TEXT,
-        reason TEXT
+        reason TEXT,
+        department_id INTEGER
     )
     """)
 
@@ -37,16 +38,16 @@ def initialize_database():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS inpatient (
         id TEXT PRIMARY KEY,
-        patient_id INTEGER,
+        patient_admission_id TEXT,
         department_id INTEGER,
-        room_number TEXT,
-        admission_date TEXT,
+        room_number INTEGER,
+        entrance_date TEXT,
         discharge_date TEXT,
         status TEXT
     )
     """)
 
-    # create table for the clinic departments
+    # Create table for the clinic departments
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS department (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,19 +56,18 @@ def initialize_database():
     )
     """)
 
-    # create table for the department rooms. Each room belongs to a department and has a room number. also has a status, which can be either "occupied" or "vacant". als, patient_id field to reference inpateint table. it can be null if the room is vacant.
+    # Create table for the department rooms
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS room (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         department_id INTEGER,
-        room_number TEXT,
+        room_number INTEGER,
         status TEXT,
         patient_id INTEGER
     )
     """)
 
-
-    # create table for the department staff. they are users who are assigned to a department. use user_id to reference the user table, and department_id to reference the department table.
+    # Create table for the department staff
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS staff (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -76,6 +76,34 @@ def initialize_database():
     )
     """)
 
+    connection.commit()
+
+    # Check if departments already exist
+    cursor.execute("SELECT COUNT(*) FROM department")
+    department_count = cursor.fetchone()[0]
+
+    if department_count == 0:
+        # Add departments if none exist
+        departments = [
+            ("Cardiology", "Handles heart-related issues"),
+            ("Neurology", "Focuses on brain and nervous system disorders"),
+            ("Orthopedics", "Deals with bone and muscle issues")
+        ]
+        cursor.executemany("INSERT INTO department (name, description) VALUES (?, ?)", departments)
+        print("Departments added.")
+
+    # Check if rooms already exist
+    cursor.execute("SELECT COUNT(*) FROM room")
+    room_count = cursor.fetchone()[0]
+
+    if room_count == 0:
+        # Add 5 rooms for each department if none exist
+        for department_id in range(1, 4):  # Assuming department IDs start from 1
+            rooms = [(department_id, i, "vacant", None) for i in range(1, 6)]
+            cursor.executemany("INSERT INTO room (department_id, room_number, status, patient_id) VALUES (?, ?, ?, ?)", rooms)
+        print("Rooms added.")
 
     connection.commit()
     connection.close()
+
+    print("Database initialized.")

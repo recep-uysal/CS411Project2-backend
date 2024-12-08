@@ -25,8 +25,9 @@ class AdmissionCRUD:
                 contact, 
                 address, 
                 admitted_on, 
-                reason
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                reason,
+                department_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
             
             # Execute the query with all fields
@@ -40,7 +41,8 @@ class AdmissionCRUD:
                 admission.contact,      # contact
                 admission.address,      # address
                 admission.admitted_on,  # admitted_on time
-                admission.reason        # reason
+                admission.reason,        # reason
+                admission.department_id # department_id
             ))
             
             connection.commit()
@@ -96,6 +98,7 @@ class AdmissionCRUD:
             "address": current_admission[7],
             "admitted_on": current_admission[8],
             "reason": current_admission[9],
+            "department_id": current_admission[10]
         }
 
         # Use new values if provided; otherwise, keep old ones
@@ -109,6 +112,7 @@ class AdmissionCRUD:
             "address": admission.address or current_data["address"],
             "admitted_on": admission.admitted_on or current_data["admitted_on"],
             "reason": admission.reason or current_data["reason"],
+            "department_id": admission.department_id or current_data["department_id"]
         }
 
         # Perform the update with the merged data
@@ -122,7 +126,8 @@ class AdmissionCRUD:
             contact = ?,
             address = ?,
             admitted_on = ?,
-            reason = ?
+            reason = ?,
+            department_id = ?,
         WHERE id = ?
         """
         cursor.execute(update_query, (
@@ -135,6 +140,7 @@ class AdmissionCRUD:
             updated_data["address"],
             updated_data["admitted_on"],
             updated_data["reason"],
+            updated_data["department_id"],
             admission_id,
         ))
 
@@ -161,6 +167,17 @@ class AdmissionCRUD:
         cursor = connection.cursor()
         query = "SELECT * FROM admission WHERE government_id = ?"
         cursor.execute(query, (government_id,))
+        result = cursor.fetchall()
+        connection.close()
+        return result
+
+
+    # define a method to get all admissions for a department
+    def get_department_admissions(self, department_id):
+        connection = sqlite3.connect(self.db_path)
+        cursor = connection.cursor()
+        query = "SELECT * FROM admission WHERE department_id = ?"
+        cursor.execute(query, (department_id,))
         result = cursor.fetchall()
         connection.close()
         return result

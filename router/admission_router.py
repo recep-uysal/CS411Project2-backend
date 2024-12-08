@@ -39,3 +39,8 @@ def delete_admission(admission_id):
 @admission_router.get("/patients/{government_id}/admissions/")
 def get_patient_admissions(government_id):
     return admission_service.get_patient_admissions(government_id)
+
+# get all admissions for a department
+@admission_router.get("/departments/{department_id}/admissions/")
+def get_department_admissions(department_id):
+    return admission_service.get_department_admissions(department_id)
