@@ -21,6 +21,7 @@ def initialize_database():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS admission (
         id TEXT PRIMARY KEY,
+        government_id INTEGER UNIQUE,
         patient_name TEXT,
         patient_surname TEXT,
         age INTEGER,
@@ -35,7 +36,7 @@ def initialize_database():
     # Create inpatient table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS inpatient (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id TEXT PRIMARY KEY,
         patient_id INTEGER,
         department_id INTEGER,
         room_number TEXT,

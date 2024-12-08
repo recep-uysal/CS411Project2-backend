@@ -17,6 +17,7 @@ class AdmissionCRUD:
             query = """
             INSERT INTO admission (
                 id, 
+                government_id,
                 patient_name, 
                 patient_surname, 
                 age, 
@@ -25,19 +26,20 @@ class AdmissionCRUD:
                 address, 
                 admitted_on, 
                 reason
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
             
             # Execute the query with all fields
             cursor.execute(query, (
                 admission_id,           # id
+                admission.government_id,        # government_id
                 admission.patient_name,         # patient_name
                 admission.patient_surname,      # patient_surname
                 admission.age,          # age
                 admission.gender,       # gender
                 admission.contact,      # contact
                 admission.address,      # address
-                admission.admitted_on,  # admitted_on
+                admission.admitted_on,  # admitted_on time
                 admission.reason        # reason
             ))
             
@@ -85,18 +87,20 @@ class AdmissionCRUD:
 
         # Map the current database values
         current_data = {
-            "patient_name": current_admission[1],
-            "patient_surname": current_admission[2],
-            "age": current_admission[3],
-            "gender": current_admission[4],
-            "contact": current_admission[5],
-            "address": current_admission[6],
-            "admitted_on": current_admission[7],
-            "reason": current_admission[8],
+            "government_id": current_admission[1],
+            "patient_name": current_admission[2],
+            "patient_surname": current_admission[3],
+            "age": current_admission[4],
+            "gender": current_admission[5],
+            "contact": current_admission[6],
+            "address": current_admission[7],
+            "admitted_on": current_admission[8],
+            "reason": current_admission[9],
         }
 
         # Use new values if provided; otherwise, keep old ones
         updated_data = {
+            "government_id": admission.government_id or current_data["government_id"],
             "patient_name": admission.patient_name or current_data["patient_name"],
             "patient_surname": admission.patient_surname or current_data["patient_surname"],
             "age": admission.age or current_data["age"],
@@ -110,7 +114,8 @@ class AdmissionCRUD:
         # Perform the update with the merged data
         update_query = """
         UPDATE admission
-        SET patient_name = ?,
+        SET government_id = ?,
+            patient_name = ?,
             patient_surname = ?,
             age = ?,
             gender = ?,
@@ -121,6 +126,7 @@ class AdmissionCRUD:
         WHERE id = ?
         """
         cursor.execute(update_query, (
+            updated_data["government_id"],
             updated_data["patient_name"],
             updated_data["patient_surname"],
             updated_data["age"],
@@ -150,11 +156,11 @@ class AdmissionCRUD:
 
    
     # define a method to get all admissions for a patient
-    def get_patient_admissions(self, patient_id):
+    def get_patient_admissions(self, government_id):
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
-        query = "SELECT * FROM admission WHERE patient_id = ?"
-        cursor.execute(query, (patient_id,))
+        query = "SELECT * FROM admission WHERE government_id = ?"
+        cursor.execute(query, (government_id,))
         result = cursor.fetchall()
         connection.close()
         return result

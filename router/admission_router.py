@@ -36,6 +36,6 @@ def delete_admission(admission_id):
     raise HTTPException(status_code=404, detail="Admission not found")
 
 # get all admissions for a patient
-@admission_router.get("/patients/{patient_id}/admissions/")
-def get_patient_admissions(patient_id):
-    return admission_service.get_patient_admissions(patient_id)
+@admission_router.get("/patients/{government_id}/admissions/")
+def get_patient_admissions(government_id):
+    return admission_service.get_patient_admissions(government_id)
