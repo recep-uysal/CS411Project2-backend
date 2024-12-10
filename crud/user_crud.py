@@ -5,7 +5,7 @@ from model.user_dto import new_user_dto
 
 class UserCRUD:
     def __init__(self):
-        self.db_path = os.path.join("data", "user.db")
+        self.db_path = "hospital_management.db"
 
     def get_user_by_email_and_password(self, email: str, password: str):
         connection = sqlite3.connect(self.db_path)

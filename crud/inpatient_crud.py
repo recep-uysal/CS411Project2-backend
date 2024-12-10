@@ -3,7 +3,7 @@ import uuid
 
 class InpatientCRUD:
     def __init__(self):
-        self.db_path = "user.db"
+        self.db_path = "hospital_management.db"
 
     def add_inpatient(self, inpatient):
         connection = sqlite3.connect(self.db_path)

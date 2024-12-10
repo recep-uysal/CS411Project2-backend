@@ -1,7 +1,7 @@
 import sqlite3
 
 def initialize_database():
-    connection = sqlite3.connect("user.db")
+    connection = sqlite3.connect("hospital_management.db")
     cursor = connection.cursor()
 
     # Create the user table
@@ -29,7 +29,7 @@ def initialize_database():
         contact TEXT,
         address TEXT,
         admitted_on TEXT,
-        reason TEXT,
+        insurance TEXT,
         department_id INTEGER
     )
     """)

@@ -3,7 +3,7 @@ import uuid
 
 class AdmissionCRUD:
     def __init__(self):
-        self.db_path = "user.db"
+        self.db_path = "hospital_management.db"
 
     def add_admission(self, admission):
         try:
@@ -25,7 +25,7 @@ class AdmissionCRUD:
                 contact, 
                 address, 
                 admitted_on, 
-                reason,
+                insurance,
                 department_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
@@ -41,7 +41,7 @@ class AdmissionCRUD:
                 admission.contact,      # contact
                 admission.address,      # address
                 admission.admitted_on,  # admitted_on time
-                admission.reason,        # reason
+                admission.insurance,        # reason
                 admission.department_id # department_id
             ))
             
@@ -97,7 +97,7 @@ class AdmissionCRUD:
             "contact": current_admission[6],
             "address": current_admission[7],
             "admitted_on": current_admission[8],
-            "reason": current_admission[9],
+            "insurance": current_admission[9],
             "department_id": current_admission[10]
         }
 
@@ -111,7 +111,7 @@ class AdmissionCRUD:
             "contact": admission.contact or current_data["contact"],
             "address": admission.address or current_data["address"],
             "admitted_on": admission.admitted_on or current_data["admitted_on"],
-            "reason": admission.reason or current_data["reason"],
+            "insurance": admission.reason or current_data["reason"],
             "department_id": admission.department_id or current_data["department_id"]
         }
 
@@ -126,7 +126,7 @@ class AdmissionCRUD:
             contact = ?,
             address = ?,
             admitted_on = ?,
-            reason = ?,
+            insurance = ?,
             department_id = ?,
         WHERE id = ?
         """
@@ -139,7 +139,7 @@ class AdmissionCRUD:
             updated_data["contact"],
             updated_data["address"],
             updated_data["admitted_on"],
-            updated_data["reason"],
+            updated_data["insurance"],
             updated_data["department_id"],
             admission_id,
         ))

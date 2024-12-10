@@ -9,5 +9,5 @@ class AdmissionDTO(BaseModel):
     contact: str
     address: str
     admitted_on: str
-    reason: str
+    insurance: str
     department_id: int

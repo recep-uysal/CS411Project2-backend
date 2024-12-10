@@ -19,15 +19,10 @@ async def lifespan(app: FastAPI):
 # Create the FastAPI app with lifespan
 app = FastAPI(lifespan=lifespan)
 
-# CORS middleware configuration
-origins = [
-    "http://localhost:3000",  # Replace with your React app's URL during development
-    "https://your-frontend-domain.com",  # Add your deployed React app's URL
-]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # List of allowed origins
+    allow_origins="*",  # List of allowed origins
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all HTTP headers
