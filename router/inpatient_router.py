@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from model.inpatient_dto import InpatientDTO
+from model.inpatient_dto import InpatientDTO, InpatientAddDTO
 from model.inpatient_dto import updateDTO
 from services.inpatient_service import InpatientService
 
@@ -7,7 +7,7 @@ inpatient_router = APIRouter()
 inpatient_service = InpatientService()
 
 @inpatient_router.post("/inpatients/")
-def add_inpatient(inpatient: InpatientDTO):
+def add_inpatient(inpatient: InpatientAddDTO):
     return inpatient_service.add_inpatient(inpatient)
 
 @inpatient_router.get("/inpatients/{inpatient_id}")
