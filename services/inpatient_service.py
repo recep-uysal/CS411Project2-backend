@@ -1,12 +1,12 @@
 from crud.inpatient_crud import InpatientCRUD
-from model.inpatient_dto import InpatientDTO
+from model.inpatient_dto import InpatientDTO, InpatientAddDTO
 from model.inpatient_dto import updateDTO
 
 class InpatientService:
     def __init__(self):
         self.inpatient_crud = InpatientCRUD()
 
-    def add_inpatient(self, inpatient: InpatientDTO):
+    def add_inpatient(self, inpatient: InpatientAddDTO):
         return self.inpatient_crud.add_inpatient(inpatient)
 
     def get_inpatient(self, inpatient_id):

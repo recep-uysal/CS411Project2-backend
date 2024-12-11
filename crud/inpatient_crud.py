@@ -1,6 +1,6 @@
 import sqlite3
 import uuid
-
+from datetime import date
 class InpatientCRUD:
     def __init__(self):
         self.db_path = "hospital_management.db"
@@ -13,9 +13,13 @@ class InpatientCRUD:
             # Generate a unique inpatient ID
             inpatient_id = str(uuid.uuid4())
 
+            department_query = "SELECT id, department_id FROM admission WHERE government_id = ?"
+            cursor.execute(department_query, (inpatient.government_id,))
+            patient_admission_id, department_id = cursor.fetchone()
+
             # Check if the room is already occupied
-            room_query = "SELECT status FROM room WHERE room_number = ?"
-            cursor.execute(room_query, (inpatient.room_number,))
+            room_query = "SELECT status FROM room WHERE room_number = ? and department_id = ?"
+            cursor.execute(room_query, (inpatient.room_number, department_id))
             room_status = cursor.fetchone()
 
             if not room_status:
@@ -24,9 +28,11 @@ class InpatientCRUD:
             if room_status[0].lower() == "occupied":
                 return {"error": "Room is already occupied"}
 
+            current_date = date.today()
+
             # Assign the room to the patient and mark it as occupied, check the department_id is matching
             update_room_query = "UPDATE room SET status = 'occupied', patient_id = ? WHERE room_number = ? AND department_id = ?"
-            cursor.execute(update_room_query, (inpatient_id, inpatient.room_number, inpatient.department_id))
+            cursor.execute(update_room_query, (inpatient_id, inpatient.room_number, department_id))
 
             
 
@@ -37,12 +43,12 @@ class InpatientCRUD:
             """
             cursor.execute(insert_query, (
                 inpatient_id,            # Unique inpatient ID
-                inpatient.patient_admission_id,    # Patient's admission ID
-                inpatient.department_id, # Department ID
+                patient_admission_id,    # Patient's admission ID
+                department_id, # Department ID
                 inpatient.room_number,   # Room number
-                inpatient.entrance_date, # Admission date
-                inpatient.discharge_date, # Discharge date
-                inpatient.status          # Inpatient status
+                current_date, # Admission date
+                None, # Discharge date
+                "active"          # Inpatient status
             ))
 
             connection.commit()

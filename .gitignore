@@ -1,2 +1,7 @@
 /.idea/
 /__pycache__/
+# Ignore Python cache files and directories
+__pycache__/
+*.pyc
+*.db
+

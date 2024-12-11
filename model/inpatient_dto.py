@@ -9,6 +9,11 @@ class InpatientDTO(BaseModel):
     entrance_date: str
     discharge_date: Optional[str] = None
     status: str
+
+class InpatientAddDTO(BaseModel):
+    government_id : int
+    room_number: int
+    
     
     
 class updateDTO(BaseModel):
