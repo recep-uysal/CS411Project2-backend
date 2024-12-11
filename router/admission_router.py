@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from model.admission_dto import AdmissionDTO
+from model.admission_dto import AdmissionDTO, UpdateAdmissionDTO
 from services.admission_service import AdmissionService
 
 admission_router = APIRouter()
@@ -22,7 +22,7 @@ def get_admission(admission_id):
     raise HTTPException(status_code=404, detail="Admission not found")
 
 @admission_router.put("/admissions/{admission_id}")
-def update_admission(admission_id, admission: AdmissionDTO):
+def update_admission(admission_id, admission: UpdateAdmissionDTO ):
     admission_service.update_admission(admission_id, admission)
     return {"message": "Admission updated successfully"}
 

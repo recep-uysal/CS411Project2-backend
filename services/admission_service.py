@@ -1,5 +1,5 @@
 from crud.admission_crud import AdmissionCRUD
-from model.admission_dto import AdmissionDTO
+from model.admission_dto import AdmissionDTO, UpdateAdmissionDTO
 
 class AdmissionService:
     def __init__(self):
@@ -14,7 +14,7 @@ class AdmissionService:
     def get_admission(self, admission_id):
         return self.admission_crud.get_admission(admission_id)
     
-    def update_admission(self, admission_id, admission: AdmissionDTO):
+    def update_admission(self, admission_id, admission: UpdateAdmissionDTO):
         self.admission_crud.update_admission(admission_id, admission)
 
     def delete_admission(self, admission_id):

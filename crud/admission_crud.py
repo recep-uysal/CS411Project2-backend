@@ -103,45 +103,39 @@ class AdmissionCRUD:
 
         # Use new values if provided; otherwise, keep old ones
         updated_data = {
-            "government_id": admission.government_id or current_data["government_id"],
-            "patient_name": admission.patient_name or current_data["patient_name"],
-            "patient_surname": admission.patient_surname or current_data["patient_surname"],
-            "age": admission.age or current_data["age"],
-            "gender": admission.gender or current_data["gender"],
-            "contact": admission.contact or current_data["contact"],
-            "address": admission.address or current_data["address"],
-            "admitted_on": admission.admitted_on or current_data["admitted_on"],
-            "insurance": admission.reason or current_data["reason"],
-            "department_id": admission.department_id or current_data["department_id"]
+        "patient_name": admission.patient_name or current_data["patient_name"],
+        "patient_surname": admission.patient_surname or current_data["patient_surname"],
+        "age": admission.age or current_data["age"],
+        "gender": admission.gender or current_data["gender"],
+        "contact": admission.contact or current_data["contact"],
+        "address": admission.address or current_data["address"],
+        "insurance": admission.insurance or current_data["insurance"],
+        "department_id": admission.department_id or current_data["department_id"]
         }
 
         # Perform the update with the merged data
         update_query = """
         UPDATE admission
-        SET government_id = ?,
-            patient_name = ?,
-            patient_surname = ?,
-            age = ?,
-            gender = ?,
-            contact = ?,
-            address = ?,
-            admitted_on = ?,
-            insurance = ?,
-            department_id = ?,
+        SET patient_name = ?,
+        patient_surname = ?,
+        age = ?,
+        gender = ?,
+        contact = ?,
+        address = ?,
+        insurance = ?,
+        department_id = ?
         WHERE id = ?
         """
         cursor.execute(update_query, (
-            updated_data["government_id"],
-            updated_data["patient_name"],
-            updated_data["patient_surname"],
-            updated_data["age"],
-            updated_data["gender"],
-            updated_data["contact"],
-            updated_data["address"],
-            updated_data["admitted_on"],
-            updated_data["insurance"],
-            updated_data["department_id"],
-            admission_id,
+        updated_data["patient_name"],
+        updated_data["patient_surname"],
+        updated_data["age"],
+        updated_data["gender"],
+        updated_data["contact"],
+        updated_data["address"],
+        updated_data["insurance"],
+        updated_data["department_id"],
+        admission_id
         ))
 
         connection.commit()
