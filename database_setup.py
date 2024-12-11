@@ -12,8 +12,7 @@ def initialize_database():
             password TEXT NOT NULL,
             name TEXT NOT NULL,
             surname TEXT NOT NULL,
-            role TEXT NOT NULL,
-            verified BOOLEAN DEFAULT 0
+            role TEXT NOT NULL
         );
     """)
 
@@ -73,6 +72,14 @@ def initialize_database():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER,
         department_id INTEGER
+    )
+    """)
+
+    # Create table for the clinic departments
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS verification (
+        email TEXT NOT NULL,
+        code TEXT NOT NULL
     )
     """)
 
