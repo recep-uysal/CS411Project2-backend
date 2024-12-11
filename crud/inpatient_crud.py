@@ -13,9 +13,13 @@ class InpatientCRUD:
             # Generate a unique inpatient ID
             inpatient_id = str(uuid.uuid4())
 
+            department_query = "SELECT id, department_id FROM admission WHERE government_id = ?"
+            cursor.execute(department_query, (inpatient.government_id,))
+            patient_admission_id, department_id = cursor.fetchone()
+
             # Check if the room is already occupied
-            room_query = "SELECT status FROM room WHERE room_number = ?"
-            cursor.execute(room_query, (inpatient.room_number,))
+            room_query = "SELECT status FROM room WHERE room_number = ? and department_id = ?"
+            cursor.execute(room_query, (inpatient.room_number, department_id))
             room_status = cursor.fetchone()
 
             if not room_status:
@@ -24,9 +28,6 @@ class InpatientCRUD:
             if room_status[0].lower() == "occupied":
                 return {"error": "Room is already occupied"}
 
-            department = "SELECT id, department_id FROM admission WHERE government_id = ?"
-            cursor.execute(department, (inpatient.government_id,))
-            patient_admission_id, department_id = cursor.fetchone()
             current_date = date.today()
 
             # Assign the room to the patient and mark it as occupied, check the department_id is matching
