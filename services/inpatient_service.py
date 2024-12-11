@@ -1,5 +1,6 @@
 from crud.inpatient_crud import InpatientCRUD
 from model.inpatient_dto import InpatientDTO
+from model.inpatient_dto import updateDTO
 
 class InpatientService:
     def __init__(self):
@@ -28,3 +29,9 @@ class InpatientService:
     
     def delete_all_inpatients(self):
         return self.inpatient_crud.delete_all_inpatients()
+
+    def discharge_inpatient(self, inpatient_id):
+        return self.inpatient_crud.discharge_inpatient(inpatient_id)
+
+    def update_department_room_status(self, inpatient_id: str, update: updateDTO):
+        return self.inpatient_crud.update_department_room_status(inpatient_id, update)

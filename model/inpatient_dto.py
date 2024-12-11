@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
+
 class InpatientDTO(BaseModel):
     patient_admission_id: str
     department_id: int
@@ -10,3 +11,7 @@ class InpatientDTO(BaseModel):
     status: str
     
     
+class updateDTO(BaseModel):
+    department_id: int
+    room_number: int
+    status: str

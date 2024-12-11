@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from model.inpatient_dto import InpatientDTO
+from model.inpatient_dto import updateDTO
 from services.inpatient_service import InpatientService
 
 inpatient_router = APIRouter()
@@ -47,3 +48,13 @@ def get_all_inpatients_by_department(department_id: int):
 @inpatient_router.delete("/inpatients/")
 def delete_all_inpatients():
     return inpatient_service.delete_all_inpatients()
+
+# discharge inpatient
+@inpatient_router.put("/inpatients/discharge/{inpatient_id}")
+def discharge_inpatient(inpatient_id):
+    return inpatient_service.discharge_inpatient(inpatient_id)
+
+# update department and room of inpatient
+@inpatient_router.put("/inpatients/update_department_room_status/{inpatient_id}")
+def update_department_room_status(inpatient_id: str, update: updateDTO):
+    return inpatient_service.update_department_room_status(inpatient_id, update)
