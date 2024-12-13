@@ -8,6 +8,7 @@ from services.auth_service import AuthService
 login_router = APIRouter()
 auth_service = AuthService()
 
+
 @login_router.post("/checkCode")
 def check_code(user: user_code_dto):
     result = auth_service.verify_user(user.email, user.code)
@@ -24,3 +25,12 @@ def login(user: user_dto):
 
     send_verification_email(user.email)
     return {"message": "Login successful", "user": authenticated_user}
+
+
+@login_router.get("/getUserByEmail/{email}")
+def get_user_by_email(email):
+    user = auth_service.get_user_by_email(email)
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid email")
+
+    return {"user": user}

@@ -10,9 +10,9 @@ class UserCRUD:
     def get_user_by_email(self, email: str):
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
-        query = "SELECT id FROM user WHERE email = ?"
+        query = "SELECT id, name, surname, email, role FROM user WHERE email = ?"
         cursor.execute(query, (email,))
-        result = cursor.fetchall()  # Use fetchone for a single result
+        result = cursor.fetchone()  # Use fetchone for a single result
         connection.close()
         return result
     
@@ -60,3 +60,11 @@ class UserCRUD:
         result = cursor.fetchone()
         connection.close()
         return result
+
+    def change_user_password(self, email: str, password: str):
+        connection = sqlite3.connect(self.db_path)
+        cursor = connection.cursor()
+        query = ("UPDATE user SET password = ? WHERE email = ?")
+        cursor.execute(query, (password, email))
+        connection.commit()
+        connection.close()
