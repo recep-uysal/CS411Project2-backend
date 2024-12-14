@@ -15,8 +15,17 @@ class new_user_dto(BaseModel):
     surname: str
     role: str
 
+
+class UserDtoForAdmin(BaseModel):
+   id: str
+   name: str
+   surname: str
+   email: str
+   role: str
+
 class new_password_dto(BaseModel):
     email: str
     old_password: str
     new_password: str
+
 

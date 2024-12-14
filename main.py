@@ -6,6 +6,7 @@ from router.login_router import login_router
 from router.register_router import register_router
 from router.inpatient_router import inpatient_router
 from router.admission_router import admission_router
+from router.user_management_router import user_management_router
 from database_setup import initialize_database  # Import your database setup function
 
 # Define the lifespan context manager using asynccontextmanager
@@ -33,6 +34,7 @@ app.include_router(login_router, prefix="/login")
 app.include_router(register_router, prefix="/register")
 app.include_router(inpatient_router, prefix="/inpatient")
 app.include_router(admission_router, prefix="/admission")
+app.include_router(user_management_router, prefix="/user_management")
 
 # Test route to verify the app is running
 @app.post("/test")
