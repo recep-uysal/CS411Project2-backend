@@ -7,28 +7,45 @@ class AuthService:
         self.user_crud = UserCRUD()
 
     def verify_user_credentials(self, email: str, password: str):
-        # Fetch user from the database via CRUD layer
         user = self.user_crud.get_user_by_email_and_password(email, password)
         if not user:
             return None
-        # You can add additional business logic here if needed
+
         return user
 
     def register_user(self, new_user: new_user_dto):
-        # Check if the email is already registered
         existing_user = self.user_crud.get_user_by_email(new_user.email)
         if existing_user:
             raise ValueError("Email is already registered")
 
-        # Add the user to the database
         self.user_crud.add_user(new_user)
 
     def authenticate_user(self, email: str, password: str):
-        # Fetch user from the database
         user = self.user_crud.get_user_by_email_and_password(email, password)
         if not user:
             return None
 
-        # Additional logic, like verifying password hash, can be added here.
-        # For simplicity, we assume the password is stored in plaintext (not recommended for production).
         return {"id": user[0], "email": user[1], "role": user[2]}
+
+    def verify_user(self, email: str, code: str):
+        user = self.user_crud.verify_user_code(email, code)
+        if not user:
+            return None
+
+        self.user_crud.remove_user_code(email)
+        return {"email": user[0], "code": user[1]}
+
+    def change_password(self, email: str, old_password: str, new_password: str):
+        user = self.user_crud.get_user_by_email_and_password(email, old_password)
+        if not user:
+            return None
+
+        self.user_crud.change_user_password(email, new_password)
+        return True
+
+    def get_user_by_email(self, email: str):
+        result = self.user_crud.get_user_by_email(email)
+        if not result:
+            return None
+
+        return result
