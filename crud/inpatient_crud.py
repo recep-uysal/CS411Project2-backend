@@ -400,3 +400,13 @@ class InpatientCRUD:
         except sqlite3.OperationalError as e:
             return {"error": f"Database operation failed: {str(e)}"}
         
+
+    # get all rooms in the system
+    def get_all_rooms(self):
+        connection = sqlite3.connect(self.db_path)
+        cursor = connection.cursor()
+        query = "SELECT * FROM room"
+        cursor.execute(query)
+        result = cursor.fetchall()
+        connection.close()
+        return result

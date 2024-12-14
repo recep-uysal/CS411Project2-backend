@@ -35,3 +35,7 @@ class InpatientService:
 
     def update_department_room_status(self, inpatient_id: str, update: updateDTO):
         return self.inpatient_crud.update_department_room_status(inpatient_id, update)
+
+    # get all rooms in the system
+    def get_all_rooms(self):
+        return self.inpatient_crud.get_all_rooms() 
