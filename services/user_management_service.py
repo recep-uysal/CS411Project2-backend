@@ -11,6 +11,6 @@ class UserManagementService:
     def update_user(self, user_id: str, user: UserDtoForAdmin):
         return self.user_management_crud.update_inpatient(user_id, user)
 
-    def delete_user(self, user_id):
-        return self.user_management_crud.delete_inpatient(user_id)
+    def delete_user(self, user_id, user_email):
+        return self.user_management_crud.delete_user(user_id, user_email)
     
