@@ -1,7 +1,7 @@
 # dal/user_crud.py
 import os
 import sqlite3
-from model.user_dto import UserDtoForAdmin, new_user_dto
+from model.user_dto import UserDtoForAdmin
 
 class AdminCRUD:
     def __init__(self):
@@ -24,6 +24,58 @@ class AdminCRUD:
         ) for row in result]
 
         return users
+    
+    def update_user(self, id, user:UserDtoForAdmin):
+        connection = sqlite3.connect(self.db_path)
+        cursor = connection.cursor()
+
+        # Retrieve the current values from the database
+        select_query_user = "SELECT * FROM user WHERE id = ?"
+        cursor.execute(select_query_user, (id,))
+        current_user = cursor.fetchone()
+        
+        
+        
+        if not current_user:
+            connection.close()
+            return {"error": "User record not found"}
+        
+        old_email = current_user[1]
+
+        select_query_verify = "SELECT * from verification WHERE email = ?"
+        cursor.execute(select_query_verify, (old_email,))
+        verification = cursor.fetchone()
+        
+        update_query_user = """
+        UPDATE user
+        SET name = ?,
+        surname = ?,
+        email = ?,
+        role = ?
+        WHERE id = ?
+        """
+        cursor.execute(update_query_user, (
+        user.name,
+        user.surname,
+        user.email,
+        user.role,
+        id
+        ))
+        
+        if verification:
+            update_query_verify = """
+            UPDATE verification
+            SET email = ?
+            WHERE email = ?
+            """
+            cursor.execute(update_query_verify, (
+            user.email,
+            old_email
+            ))
+        
+        connection.commit()
+        connection.close()
+        return {"message": "User updated successfully"}
     
     def delete_user(self, id, email):
         connection = sqlite3.connect(self.db_path)
