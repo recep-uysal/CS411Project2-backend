@@ -1,21 +1,28 @@
 import sqlite3
 import uuid
 from datetime import date
+from config.encryption import Encrypter
+
+
 class InpatientCRUD:
     def __init__(self):
         self.db_path = "hospital_management.db"
+        self.encrypter = Encrypter()
 
     def add_inpatient(self, inpatient):
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
-
         try:
             # Generate a unique inpatient ID
             inpatient_id = str(uuid.uuid4())
 
             department_query = "SELECT id, department_id FROM admission WHERE government_id = ?"
-            cursor.execute(department_query, (inpatient.government_id,))
+            cursor.execute(department_query, (self.encrypter.encode(inpatient.government_id),))
             patient_admission_id, department_id = cursor.fetchone()
+
+            print(patient_admission_id)
+            if not patient_admission_id:
+                return {"error": "Patient not found"}
 
             # Check if the room is already occupied
             room_query = "SELECT status FROM room WHERE room_number = ? and department_id = ?"
@@ -204,6 +211,7 @@ class InpatientCRUD:
     
     # get all inpatients. also fetch the admission details. patient_admission_id is the foreign key to admission table's id. also reference to department table by inpatient's department_id and department table's id.
     def get_all_inpatients(self):
+        all_inpatients = []
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = """
@@ -214,8 +222,28 @@ class InpatientCRUD:
         """
         cursor.execute(query)
         result = cursor.fetchall()
+        for row in result:
+            inpatient = {"id": row[0],
+                         "patient_admission_id": row[1],
+                        "department_id": row[2],
+                         "room_number": row[3],
+                         "entrance_date": row[4],
+                         "discharge_date": row[5],
+                         "status": row[6],
+                         "government_id": self.encrypter.decode(row[8]),
+                         "patient_name": self.encrypter.decode(row[9]),
+                         "patient_surname": self.encrypter.decode(row[10]),
+                         "age": row[11],
+                         "gender": row[12],
+                         "contact": self.encrypter.decode(row[13]),
+                         "address": self.encrypter.decode(row[14]),
+                         "admitted_on": row[15],
+                         "insurance": row[16],
+                         "department_name": row[18],
+                         }
+            all_inpatients.append(inpatient)
         connection.close()
-        return result   
+        return all_inpatients
 
     
 

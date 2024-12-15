@@ -3,7 +3,10 @@ import sqlite3
 from email.message import EmailMessage
 import random
 
+from config.encryption import Encrypter
+
 db_path = "hospital_management.db"
+encrypter = Encrypter()
 
 def generate_otp(length=6):
     return ''.join(random.choices('0123456789', k=length))
@@ -23,8 +26,8 @@ def send_verification_email(receiver_email: str):
         smtp.login(sender_email, sender_password)
         smtp.send_message(msg)
 
-    delete_old_verification_code(receiver_email)
-    save_verification_code(receiver_email, otp)
+    delete_old_verification_code(encrypter.encode(receiver_email))
+    save_verification_code(encrypter.encode(receiver_email), otp)
 
 def save_verification_code(email:str, code: str):
     connection = sqlite3.connect(db_path)

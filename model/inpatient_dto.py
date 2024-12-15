@@ -11,7 +11,7 @@ class InpatientDTO(BaseModel):
     status: str
 
 class InpatientAddDTO(BaseModel):
-    government_id : int
+    government_id : str
     room_number: int
     
     

@@ -1,4 +1,3 @@
-# login_router.py
 from fastapi import APIRouter, HTTPException
 
 from config.email_authenticator import send_verification_email
@@ -33,4 +32,4 @@ def get_user_by_email(email):
     if not user:
         raise HTTPException(status_code=401, detail="Invalid email")
 
-    return {"user": user}
+    return user

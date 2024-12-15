@@ -1,9 +1,14 @@
 import sqlite3
 import uuid
 
+from config.email_authenticator import encrypter
+from config.encryption import Encrypter
+
+
 class AdmissionCRUD:
     def __init__(self):
         self.db_path = "hospital_management.db"
+        self.encrypter = Encrypter()
 
     def add_admission(self, admission):
         try:
@@ -29,20 +34,19 @@ class AdmissionCRUD:
                 department_id
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
-            
-            # Execute the query with all fields
+
             cursor.execute(query, (
-                admission_id,           # id
-                admission.government_id,        # government_id
-                admission.patient_name,         # patient_name
-                admission.patient_surname,      # patient_surname
-                admission.age,          # age
-                admission.gender,       # gender
-                admission.contact,      # contact
-                admission.address,      # address
-                admission.admitted_on,  # admitted_on time
-                admission.insurance,        # reason
-                admission.department_id # department_id
+                admission_id,
+                encrypter.encode(admission.government_id),
+                encrypter.encode(admission.patient_name),
+                encrypter.encode(admission.patient_surname),
+                admission.age,
+                admission.gender,
+                encrypter.encode(admission.contact),
+                encrypter.encode(admission.address),
+                admission.admitted_on,
+                admission.insurance,
+                admission.department_id
             ))
             
             connection.commit()
@@ -57,13 +61,28 @@ class AdmissionCRUD:
             raise
 
     def get_all_admissions(self):
+        all_admissions = []
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = "SELECT * FROM admission"
         cursor.execute(query)
         result = cursor.fetchall()
         connection.close()
-        return result
+        for row in result:
+            admission = {"admission_id": row[0],
+                         "government_id": encrypter.decode(row[1]),
+                         "patient_name": encrypter.decode(row[2]),
+                         "patient_surname": encrypter.decode(row[3]),
+                         "age": row[4],
+                         "gender": row[5],
+                         "contact": encrypter.decode(row[6]),
+                         "address": encrypter.decode(row[7]),
+                         "admitted_on": row[8],
+                         "insurance": row[9],
+                         "department_id": row[10]
+                         }
+            all_admissions.append(admission)
+        return all_admissions
 
     def get_admission(self, admission_id):
         connection = sqlite3.connect(self.db_path)
@@ -101,19 +120,17 @@ class AdmissionCRUD:
             "department_id": current_admission[10]
         }
 
-        # Use new values if provided; otherwise, keep old ones
         updated_data = {
-        "patient_name": admission.patient_name or current_data["patient_name"],
-        "patient_surname": admission.patient_surname or current_data["patient_surname"],
+        "patient_name": encrypter.encode(admission.patient_name) or current_data["patient_name"],
+        "patient_surname": encrypter.encode(admission.patient_surname) or current_data["patient_surname"],
         "age": admission.age or current_data["age"],
         "gender": admission.gender or current_data["gender"],
-        "contact": admission.contact or current_data["contact"],
-        "address": admission.address or current_data["address"],
+        "contact": encrypter.encode(admission.contact) or current_data["contact"],
+        "address": encrypter.encode(admission.address) or current_data["address"],
         "insurance": admission.insurance or current_data["insurance"],
         "department_id": admission.department_id or current_data["department_id"]
         }
 
-        # Perform the update with the merged data
         update_query = """
         UPDATE admission
         SET patient_name = ?,
@@ -160,7 +177,7 @@ class AdmissionCRUD:
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = "SELECT * FROM admission WHERE government_id = ?"
-        cursor.execute(query, (government_id,))
+        cursor.execute(query, (encrypter.encode(government_id,)))
         result = cursor.fetchall()
         connection.close()
         return result

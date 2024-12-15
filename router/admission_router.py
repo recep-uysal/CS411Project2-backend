@@ -7,7 +7,6 @@ admission_service = AdmissionService()
 
 @admission_router.post("/admitAdmission")
 def admit_patient(admission: AdmissionDTO):
-    print(admission)
     return admission_service.admit_patient(admission)
 
 @admission_router.get("/listAdmissions")

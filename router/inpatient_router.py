@@ -10,17 +10,6 @@ inpatient_service = InpatientService()
 def add_inpatient(inpatient: InpatientAddDTO):
     return inpatient_service.add_inpatient(inpatient)
 
-
-'''
-@inpatient_router.get("/inpatients/{inpatient_id}")
-def get_inpatient(inpatient_id):
-    inpatient = inpatient_service.get_inpatient(inpatient_id)
-    if not inpatient:
-        raise HTTPException(status_code=404, detail="Inpatient not found")
-    return inpatient
-'''
-
-
 # route to update inpatient
 @inpatient_router.put("/inpatients/{inpatient_id}")
 def update_inpatient( inpatient_id: str, inpatient: InpatientDTO):

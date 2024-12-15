@@ -1,11 +1,15 @@
 # dal/user_crud.py
 import os
 import sqlite3
+
+from config.email_authenticator import encrypter
+from config.encryption import Encrypter
 from model.user_dto import UserDtoForAdmin
 
 class AdminCRUD:
     def __init__(self):
         self.db_path = "hospital_management.db"
+        self.encrypter = Encrypter()
 
     def get_all_users(self):
         connection = sqlite3.connect(self.db_path)
@@ -17,9 +21,9 @@ class AdminCRUD:
         
         users = [UserDtoForAdmin(
             id=str(row[0]),
-            name=row[1],
-            surname=row[2],
-            email=row[3],
+            name=encrypter.decode(row[1]),
+            surname=encrypter.decode(row[2]),
+            email=encrypter.decode(row[3]),
             role=row[4]
         ) for row in result]
 
@@ -33,7 +37,6 @@ class AdminCRUD:
         select_query_user = "SELECT * FROM user WHERE id = ?"
         cursor.execute(select_query_user, (id,))
         current_user = cursor.fetchone()
-        
         
         
         if not current_user:
@@ -55,9 +58,9 @@ class AdminCRUD:
         WHERE id = ?
         """
         cursor.execute(update_query_user, (
-        user.name,
-        user.surname,
-        user.email,
+        encrypter.encode(user.name),
+        encrypter.encode(user.surname),
+        encrypter.encode(user.email),
         user.role,
         id
         ))
@@ -69,8 +72,8 @@ class AdminCRUD:
             WHERE email = ?
             """
             cursor.execute(update_query_verify, (
-            user.email,
-            old_email
+            encrypter.encode(user.email),
+            encrypter.encode(old_email)
             ))
         
         connection.commit()
@@ -85,7 +88,7 @@ class AdminCRUD:
         cursor.execute(query_user, (id, ))
 
         query_verification = "DELETE FROM verification WHERE email = ?"
-        cursor.execute(query_verification, (email, ))
+        cursor.execute(query_verification, (encrypter.encode(email), ))
 
         connection.commit()
         connection.close()

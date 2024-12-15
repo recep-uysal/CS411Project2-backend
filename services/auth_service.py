@@ -1,10 +1,12 @@
 # services/auth_service.py
+from config.encryption import Encrypter
 from crud.user_crud import UserCRUD
 from model.user_dto import new_user_dto
 
 class AuthService:
     def __init__(self):
         self.user_crud = UserCRUD()
+        self.encrypter = Encrypter()
 
     def verify_user_credentials(self, email: str, password: str):
         user = self.user_crud.get_user_by_email_and_password(email, password)
@@ -33,7 +35,7 @@ class AuthService:
             return None
 
         self.user_crud.remove_user_code(email)
-        return {"email": user[0], "code": user[1]}
+        return {"email": self.encrypter.decode(user[0]), "code": user[1]}
 
     def change_password(self, email: str, old_password: str, new_password: str):
         user = self.user_crud.get_user_by_email_and_password(email, old_password)
@@ -48,4 +50,4 @@ class AuthService:
         if not result:
             return None
 
-        return result
+        return {"name": self.encrypter.decode(result[1]), "surname": self.encrypter.decode(result[2]), "email": self.encrypter.decode(result[3]), "role": result[4]}

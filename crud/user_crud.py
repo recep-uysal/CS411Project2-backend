@@ -1,17 +1,18 @@
-# dal/user_crud.py
-import os
 import sqlite3
+
+from config.encryption import Encrypter
 from model.user_dto import new_user_dto
 
 class UserCRUD:
     def __init__(self):
         self.db_path = "hospital_management.db"
+        self.encrypter = Encrypter()
 
     def get_user_by_email(self, email: str):
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = "SELECT id, name, surname, email, role FROM user WHERE email = ?"
-        cursor.execute(query, (email,))
+        cursor.execute(query, (self.encrypter.encode(email),))
         result = cursor.fetchone()  # Use fetchone for a single result
         connection.close()
         return result
@@ -24,10 +25,10 @@ class UserCRUD:
             VALUES (?, ?, ?, ?, ?)
         """
         cursor.execute(query, (
-            new_user.email,
-            new_user.password,
-            new_user.name,
-            new_user.surname,
+            self.encrypter.encode(new_user.email),
+            self.encrypter.encode(new_user.password),
+            self.encrypter.encode(new_user.name),
+            self.encrypter.encode(new_user.surname),
             new_user.role,
         ))
         connection.commit()
@@ -38,7 +39,7 @@ class UserCRUD:
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = "SELECT id, email, role FROM user WHERE email = ? AND password = ?"
-        cursor.execute(query, (email, password))
+        cursor.execute(query, (self.encrypter.encode(email), self.encrypter.encode(password)))
         result = cursor.fetchone()
         connection.close()
         return result
@@ -47,7 +48,7 @@ class UserCRUD:
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = "SELECT email, code FROM verification WHERE email = ? AND code = ?"
-        cursor.execute(query, (email, code))
+        cursor.execute(query, (self.encrypter.encode(email), code))
         result = cursor.fetchone()
         connection.close()
         return result
@@ -56,7 +57,7 @@ class UserCRUD:
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = "DELETE FROM verification WHERE email = ?"
-        cursor.execute(query, (email, ))
+        cursor.execute(query, (self.encrypter.encode(email), ))
         result = cursor.fetchone()
         connection.close()
         return result
@@ -65,6 +66,6 @@ class UserCRUD:
         connection = sqlite3.connect(self.db_path)
         cursor = connection.cursor()
         query = ("UPDATE user SET password = ? WHERE email = ?")
-        cursor.execute(query, (password, email))
+        cursor.execute(query, (self.encrypter.encode(password), self.encrypter.encode(email)))
         connection.commit()
         connection.close()
