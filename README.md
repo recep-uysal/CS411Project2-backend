@@ -25,6 +25,8 @@ python -m venv venv
 .\venv\Scripts\activate (for Windows)
 source venv/bin/activate (for MacOS and Linux)
 
+pip install -r requirements.txt
+
 uvicorn main:app --reload
 uvicorn main:app --host 127.0.0.1 --port 9000 --reload --log-level debug (if you want to run on a specific port and see the logs for the debugging)
 
