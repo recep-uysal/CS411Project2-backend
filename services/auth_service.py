@@ -35,7 +35,7 @@ class AuthService:
             return None
 
         self.user_crud.remove_user_code(email)
-        return {"email": self.encrypter.decode(user[0]), "code": user[1]}
+        return {"email": self.encrypter.decode(user[0]), "code": user[1], "role":user[2]}
 
     def change_password(self, email: str, old_password: str, new_password: str):
         user = self.user_crud.get_user_by_email_and_password(email, old_password)
